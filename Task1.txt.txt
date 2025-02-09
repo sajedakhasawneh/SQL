@@ -1,0 +1,51 @@
+create database library;
+create table Book(
+bookID int primary key,
+Title varchar(50) not null,
+AuthorID int unique,  
+PublishedYear int,
+CopiesAvailable int,
+BookCategory varchar(50)
+);
+create table Author(
+AuthorID int primary key,
+FirstName varchar(50),
+LastName  varchar(50),
+BirthYear Date
+);
+
+Insert into Book
+Values
+(1,'Cities of Salt', 1 ,1984, 20,'novel'),
+(2,'sleeping murder',2,197,5, 'novel'),
+(3,'1984',3, 1948,10, 'novel'),
+(4,'Atomic Habits', 4 ,2018,100, 'novel'),
+(5,'Men in the Sun', 5 ,1963,3, 'novel');
+
+
+Insert into Author
+Values
+(1,'Abdul Rahman','Munif','1933-05-29'),
+(2,'Agatha', ' christie', '1890-02-09'),
+(3,'Arthur', 'Conan Doyle', '1859-05-22'),
+(4,'James', 'Clear' ,'1986-02-09 '),
+(5,'Ghassan', 'Kanafani' , '1936-04-09');
+
+select * FROM Book;
+select * FROM Author;
+
+select Title, MAX(CopiesAvailable) as  highestCopies, MIN(CopiesAvailable) as  lowestCopies
+ From Book;
+
+ select  AVG(PublishedYear) as Avg 
+ From Book;
+
+select Count(CopiesAvailable) as NumOfBooks
+From Book;
+
+Truncate table Book;
+
+alter table Author 
+ADD PhoneNum int, Email varchar(20);
+
+Drop table Author;
