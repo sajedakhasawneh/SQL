@@ -1,0 +1,207 @@
+create database SchoolManagmentSystem ;
+
+create table Students (
+ID int primary key identity(1,1),
+StudentID int unique,
+Name varchar(50) not null,
+BirthD Date,
+sAddress varchar(50)
+);
+
+
+
+create table familyInfo(
+ID int primary key identity(1,1),
+fatherName varchar(50),
+Phone varchar(50),
+fAddress varchar(50),
+studentID int unique,
+Foreign key(studentID)references Students(ID),
+);
+
+
+
+create table Courses(
+ID int primary key identity(1,1),
+CourseID int unique,
+ Cname varchar(50),
+Cdescription varchar(500),
+CResource varchar(500)
+ );
+
+create table Class(
+ID int primary key identity(1,1),
+classID int unique,
+classCode varchar(15),
+roomNumber int, 
+schedule varchar(50),
+courseID int,
+Foreign key (courseID) references Courses(ID),
+);
+
+create table Assignments (
+ID int primary key identity(1,1),
+assignmentID int unique,
+name varchar(50) not null,
+description varchar(500),
+deadline Date,
+Astatus char(4),
+courseID int,
+Foreign key (courseID) references Courses(ID),
+);
+
+create table Attendence(
+attendanceID int unique,
+attendanceDate date,
+typeAbsence varchar(15),
+studentsID int,
+Foreign key (studentsID) references Students(ID),
+);
+
+create table studentsCourses(
+studentID int,
+courseID int,
+Foreign key (studentID) references Students (ID),
+Foreign key (courseID) references Courses (ID),
+);
+
+create table studentsAssignments(
+studentID int,
+assignmentID int,
+Foreign key (studentID) references Students (ID),
+Foreign key (assignmentID) references Assignments (ID)
+);
+
+
+insert into Students 
+values 
+(123,'Ahmad Mohammad','2005-02-12','Irbid'),
+(130,'Salma Ahmad','2006-03-12','Irbid'),
+(145,'Ibrahim Ahmad','2005-12-02','Irbid'),
+(129,'sara ali','2005-10-16','Irbid');
+
+insert into familyInfo
+values 
+('Mohammad Ahmad', '07777777777', 'Irbid',1),
+('Ahmad Abdulla','07777777778','Irbid', 2),
+('Ahmad Ibrahim','07777777779','Irbid',3),
+('Ali khalid', '07777777776','Irbid',4);
+
+
+
+insert into Courses 
+values
+(101,'Math101', 'Introduction to Algebra', 'Algebra for beginners'),
+(1001, 'English001', 'study of classic English', 'shakespear`s Works' ),
+(201, 'History201', 'History', 'World History'),
+(300, 'c++', 'c++', 'c++ for beginners'),
+(308, 'SQL', 'SQL', 'introduction to SQL');
+
+
+Alter table Class
+alter column classCode varchar(15);
+
+insert into Class
+values
+(12,'M202', 202,'Sun',2),
+(15,'C202', 301,'Mon',5),
+(18,'A202', 102,'Wed',3);
+
+insert into Assignments
+values
+(10, 'Math assignment', 'Math', '2024-02-20','pass',1),
+(20, 'English assignment', 'English', '2024-03-20','fail',2),
+(33, 'C++ assignment', 'C++', '2024-04-20','pass',4),
+(41, 'SQL assignment', 'SQL', '2024-05-20','pass',5);
+
+insert into Attendence
+values
+(1,'2024-03-01','late', 1),
+(2,'2024-05-31','leaving', 1),
+(3,'2024-09-24','late', 2),
+(4,'2024-12-21','leaving', 4),
+(5,'2024-11-15','late', 2),
+(6,'2024-06-11','absence', 3);
+
+
+
+
+insert into studentsCourses 
+values
+(1,3),
+(2,1),
+(4,2),
+(3,4),
+(1,1),
+(2,4),
+(3,1);
+
+insert into studentsAssignments
+values
+(1,2),
+(1,4),
+(2,4),
+(3,4),
+(4,1),
+(3,3),
+(1,3);
+
+-- Questions
+--1
+select name, BirthD 
+From Students
+where BirthD = '2005-02-12';
+
+
+--2
+select *
+From Courses
+where Cname = 'c++';
+
+--3
+Alter table Students
+Add Email varchar(30);
+
+--test
+select * From Students;
+
+--4
+insert into Students
+values
+(100,'Laila Omar','2005-02-12','Irbid','laila@gmail.com');
+
+--5
+select Students.Name, familyInfo.fatherName, familyInfo.Phone
+from Students
+inner join familyInfo on Students.ID = familyInfo.studentID;
+
+
+--6
+select Students.Name, Courses.Cname
+from Students
+inner join studentsCourses on Students.ID = studentsCourses.studentID
+inner join Courses on Courses.ID = studentsCourses.courseID
+where Courses.Cname='Math101';
+
+--7
+select Students.Name, Assignments.name, Assignments.Astatus
+from Students
+inner join studentsAssignments on Students.ID = studentsAssignments.studentID
+inner join Assignments on Assignments.ID = studentsAssignments.assignmentID
+where Assignments.Astatus='pass' AND Assignments.name= 'SQL assignment';
+
+
+------------------------------
+insert into Attendence
+values
+(7,'2025-02-02','late', 1),
+(8,'2025-02-05','leaving', 2),
+(9,'2025-02-05','leaving', 5),
+(10,'2025-02-04','leaving', 3);
+
+
+--8
+Select Students.Name, Attendence.typeAbsence, Attendence.attendanceDate
+from Students
+inner join Attendence on Students.ID = Attendence.studentsID
+where Attendence.attendanceDate between '2025-02-02' and '2025-02-05' and Attendence.typeAbsence = 'leaving';
